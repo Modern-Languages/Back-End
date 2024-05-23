@@ -3,10 +3,10 @@ const jwt = require('jsonwebtoken')
 const { createAlumno, findAlumnoByNUA, getAllAlumnos, deleteAlumno, updateAlumno } = require('../models/AlumnosModel')
 require('dotenv').config()
 
-exports.createAlumno = async (AlumnoData) => {
+exports.createAlumno = async (AlumnoData,escuelId) => {
 	console.log('@@ userData => ', AlumnoData)
 	try {
-		const createdAlumno = await createAlumno(AlumnoData)
+		const createdAlumno = await createAlumno(AlumnoData,escuelId)
 		console.log('@@@ service => ', createdAlumno)
 		if (createdAlumno.success) {
 			return {
@@ -24,10 +24,10 @@ exports.createAlumno = async (AlumnoData) => {
 		}
 	}
 }
-exports.findAlumnoByNUA = async (NUA) => {
+exports.findAlumnoByNUA = async (NUA,escuelId) => {
 	console.log('@@ email => service => ', NUA)
 	try {
-		const found = await findAlumnoByNUA(NUA)
+		const found = await findAlumnoByNUA(NUA,escuelId)
 		if (found.success) {
 			return {
 				success: true,
@@ -45,27 +45,27 @@ exports.findAlumnoByNUA = async (NUA) => {
 		}
 	}
 }
-exports.getAllAlumnos = async () => {
+exports.getAllAlumnos = async (escuelId) => {
 	try {
-		const alumnos = await getAllAlumnos()
+		const alumnos = await getAllAlumnos(escuelId)
 		return alumnos
 	} catch (error) {
 		throw new Error('Error Getting Users: ' + error.message)
 	}
 }
 
-exports.deleteAlumno = async (NUA) => {
+exports.deleteAlumno = async (NUA,escuelId) => {
 	try {
 		console.log('NUA', NUA)
-		await deleteUser(NUA)
+		await deleteAlumno(NUA,escuelId)
 	} catch (error) {
 		throw new Error('Error Deliting Alumno' + error.message)
 	}
 }
 
-exports.updateAlumno = async (NUA, alumnoData) => {
+exports.updateAlumno = async (NUA, alumnoData,escuelId) => {
 	try {
-		await updateUser(NUA, alumnoData)
+		await updateAlumno(NUA, alumnoData,escuelId)
 	} catch (error) {
 		throw new Error('Error Updating Alumno' + error.message)
 	}

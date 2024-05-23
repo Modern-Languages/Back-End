@@ -1,9 +1,9 @@
 const firebase = require('../config/firebase')
-escuelaId= 'Ug' 
-const AlumnoCollection = firebase.firestore().collection('Escuelas').doc(escuelaId).collection('Alumnos')
 
-exports.createAlumno = async (alumnoData) => {
+
+exports.createAlumno = async (alumnoData,escuelaId) => {
   try {
+		const AlumnoCollection = firebase.firestore().collection('Escuelas').doc(escuelaId).collection('Alumnos')
 		const alumno = await AlumnoCollection.doc(alumnoData.Alm_NUA).set(alumnoData)
 		console.log('@@ modelo => ', alumno)
 		return {
@@ -17,9 +17,10 @@ exports.createAlumno = async (alumnoData) => {
 	}
 }
   
-exports.findAlumnoByNUA = async (NUA) => {
+exports.findAlumnoByNUA = async (NUA,escuelaId) => {
 	console.log('@@ model => ', NUA)
 	try {
+		const AlumnoCollection = firebase.firestore().collection('Escuelas').doc(escuelaId).collection('Alumnos')
 		const Alumno = await AlumnoCollection.where('Alm_NUA', '==', NUA).get()
 		//console.log('@@ model => ', userUsuario)
 		if (!Alumno.empty) {
@@ -42,8 +43,9 @@ exports.findAlumnoByNUA = async (NUA) => {
 	}
 }
 
-exports.getAllAlumnos = async () => {
+exports.getAllAlumnos = async (escuelaId) => {
 	try {
+		const AlumnoCollection = firebase.firestore().collection('Escuelas').doc(escuelaId).collection('Alumnos')
 		const allAlumnos = await AlumnoCollection.get()
 		const alumnos = []
 		allAlumnos.forEach((doc) => {
@@ -55,17 +57,19 @@ exports.getAllAlumnos = async () => {
 	}
 }
 
-exports.deleteAlumno = async (NUA) => {
+exports.deleteAlumno = async (NUA,escuelaId) => {
 	try {
-		await AlumnoCollection.doc(Alm_NUA).delete()
+		const AlumnoCollection = firebase.firestore().collection('Escuelas').doc(escuelaId).collection('Alumnos')
+		await AlumnoCollection.doc(NUA).delete()
 	} catch (error) {
 		throw new Error('Error deleting user' + error.message)
 	}
 }
 
-exports.updateAlumno = async (NUA, alumnoData) => {
+exports.updateAlumno = async (NUA, alumnoData,escuelaId) => {
 	try {
-		await AlumnoCollection.doc(Alm_NUA).update(alumnoData)
+		const AlumnoCollection = firebase.firestore().collection('Escuelas').doc(escuelaId).collection('Alumnos')
+		await AlumnoCollection.doc(NUA).update(alumnoData)
 	} catch (error) {
 		throw new Error('Error updating user' + error.message)
 	}

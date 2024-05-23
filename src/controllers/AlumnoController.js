@@ -5,29 +5,25 @@ const { createAlumno, findAlumnoByNUA, getAllAlumnos, deleteAlumno, updateAlumno
 exports.agregar = async (req, res) => {
   try {
 		// Codigo para registrarse
-		const {Alm_NUA,Alm_Password,Alm_Nombre, Alm_ApellidoP, Alm_ApellidoM,Alm_Email,Alm_telefono } = req.body
-		const existingAlumno = await findAlumnoByNUA(Alm_NUA)
+		const escuelId = req.params.EscuelaId
+		const {Alm_NUA,Alm_Nombre,Alm_Genero,Alm_Clase,Alm_Email,Alm_telefono } = req.body
+		const existingAlumno = await findAlumnoByNUA(Alm_NUA,escuelId)
 		if (existingAlumno.success) {
 			return res.status(400).json({
 				message: 'El usuario ya esta registrado'
 			})
 		}
 
-		const saltRounds = 10
-		const hashedPassword = await bcrypt.hash(Alm_Password, saltRounds)
-
 		const newUser = {
 			Alm_NUA: Alm_NUA,
-			Alm_Password: hashedPassword,
 			Alm_Nombre: Alm_Nombre,
-			Alm_ApellidoP: Alm_ApellidoP,
-			Alm_ApellidoM: Alm_ApellidoM,
+			Alm_Genero: Alm_Genero,
+			Alm_Clase: Alm_Clase,
 			Alm_Email: Alm_Email,
-			Alm_telefono: Alm_telefono,
-			// agregar otros campos
+			Alm_telefono: Alm_telefono
 		}
 
-		const AlumnoResult = await createAlumno(newUser)
+		const AlumnoResult = await createAlumno(newUser,escuelId)
 		console.log('@@@ result => ', AlumnoResult)
 		if (AlumnoResult.success) {
 			res.status(201).json({
@@ -46,7 +42,8 @@ exports.agregar = async (req, res) => {
 }
 exports.getAllAlumnos = async (req, res) => {
 	try {
-		const users = await getAllAlumnos()
+		const escuelId = req.params.EscuelaId
+		const users = await getAllAlumnos(escuelId)
 		res.status(200).json({
 			message: 'Success',
 			users
@@ -61,9 +58,13 @@ exports.getAllAlumnos = async (req, res) => {
 
 exports.updateAlumno = async (req, res) => {
 	try {
-		const NUA = req.params.Alm_NUA
+
+		const escuelId = req.params.EscuelaId
+		const NUA = req.params.NUA
+		console.log('nua',NUA)
+		console.log('escuela',escuelId)
 		const alumnoData = req.body
-		await updateUser(NUA, alumnoData)
+		await updateAlumno(NUA, alumnoData,escuelId)
 		res.status(200).json({
 			message: 'Alumno updated successfully'
 		})
@@ -77,9 +78,10 @@ exports.updateAlumno = async (req, res) => {
 
 exports.deleteAlumno = async (req, res) => {
 	try {
-		const NUA = req.params.Alm_NUA
+		const escuelId = req.params.EscuelaId
+		const NUA = req.params.NUA
 		console.log('user ',NUA);
-		await deleteUser(NUA)
+		await deleteAlumno(NUA,escuelId)
 		res.status(200).json({
 			message: 'Alumno deleted successfully'
 		})
