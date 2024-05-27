@@ -77,7 +77,8 @@ exports.login = async (req, res) => {
 		})
 		console.log('@@ token => ', token)
 		res.status(200).json({
-			token: token
+			token: token,
+			message: 'Success'
 		})
 	} catch (error) {
 		res.status(500).json({
