@@ -6,13 +6,16 @@ exports.agregar = async (req, res) => {
   try {
 		// Codigo para registrarse
 		const escuelId = req.params.EscuelaId
-		const {Alm_NUA,Alm_Nombre,Alm_Genero,Alm_Clase,Alm_Email,Alm_telefono } = req.body
+		const {Alm_NUA,Alm_Nombre,Alm_Genero,Alm_Clase,Alm_Email,Alm_telefono,Alm_Password } = req.body
 		const existingAlumno = await findAlumnoByNUA(Alm_NUA,escuelId)
 		if (existingAlumno.success) {
 			return res.status(400).json({
 				message: 'El usuario ya esta registrado'
 			})
 		}
+		const saltRounds = 10
+		const hashedPassword = await bcrypt.hash(Alm_Password, saltRounds)
+
 
 		const newUser = {
 			Alm_NUA: Alm_NUA,
@@ -20,7 +23,8 @@ exports.agregar = async (req, res) => {
 			Alm_Genero: Alm_Genero,
 			Alm_Clase: Alm_Clase,
 			Alm_Email: Alm_Email,
-			Alm_telefono: Alm_telefono
+			Alm_telefono: Alm_telefono,
+			Alm_Password: hashedPassword,
 		}
 
 		const AlumnoResult = await createAlumno(newUser,escuelId)
