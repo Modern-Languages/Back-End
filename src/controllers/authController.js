@@ -5,7 +5,7 @@ const { createUser, findUserByUsuario, getAllUsers, deleteUser, updateUser } = r
 exports.signup = async (req, res) => {
   try {
 		// Codigo para registrarse
-		const { sch_email, sch_password, sch_usuario,sch_nombre,sch_direccion,sch_telefono,sch_estado,sch_municipio } = req.body
+		const { sch_email, sch_password, sch_usuario,sch_nombre,sch_Staff,sch_direccion } = req.body
 		const existingUser = await findUserByUsuario(sch_usuario)
 		if (existingUser.success) {
 			return res.status(400).json({
@@ -21,10 +21,8 @@ exports.signup = async (req, res) => {
 			sch_password: hashedPassword,
 			sch_usuario: sch_usuario,
 			sch_nombre: sch_nombre,
-			sch_direccion: sch_direccion,
-			sch_telefono: sch_telefono,
-			sch_estado: sch_estado,
-			sch_municipio: sch_municipio
+			sch_Staff: sch_Staff,
+			sch_direccion: sch_direccion
 			// agregar otros campos
 		}
 
@@ -70,8 +68,8 @@ exports.login = async (req, res) => {
 		}
 
 		const token = jsonwebtoken.sign({
-			sch_usuario: sch_user.usuario,
-			sch_nombre: sch_user.nombre
+			sch_usuario: sch_user.sch_usuario,
+			sch_nombre: sch_user.sch_nombre
 		}, process.env.TOP_SECRET, {
 			expiresIn: '1h'
 		})
