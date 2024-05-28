@@ -9,7 +9,7 @@ exports.agregar = async (req, res) => {
 		const { Cla_Id, Cla_Nombre, Cla_Profesor,Cla_Alumnos } = req.body
 		const existingClase = await findClaseById(Cla_Id,escuelaId)
 		if (existingClase.success) {
-			return res.status(400).json({
+			return res.status(400).json({																		
 				message: 'El Clase ya esta registrado'
 			})
 		}
