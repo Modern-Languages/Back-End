@@ -15,6 +15,49 @@ exports.createProfesor = async (profesorData,escuelaId) => {
 		}
 	}
 }
+
+exports.agregarProfesorClase = async (claseId, profesorId, escuelaId) => {
+    try {
+        // Referencia a la colección de clases dentro de la escuela
+        const ClaseCollection = firebase.firestore().collection('Escuelas').doc(escuelaId).collection('Clases');
+        
+        // Verificar si la clase existe
+        const claseDoc = await ClaseCollection.doc(claseId).get();
+        
+        if (claseDoc.exists) {
+            const claseData = claseDoc.data();
+            
+            // Verificar si Cla_Profesor es igual a "Pendiente"
+            if (claseData.Cla_Profesor === "Pendiente") {
+                // Actualizar el campo Cla_Profesor con el ID del profesor
+                await ClaseCollection.doc(claseId).update({
+                    Cla_Profesor: profesorId
+                });
+
+                return {
+                    success: true,
+                    message: 'Profesor asignado a la clase correctamente.'
+                };
+            } else {
+                return {
+                    success: false,
+                    error: 'La clase ya tiene un profesor asignado.'
+                };
+            }
+        } else {
+            return {
+                success: false,
+                error: 'La clase no está registrada.'
+            };
+        }
+    } catch (error) {
+        return {
+            success: false,
+            error: error.message
+        };
+    }
+};
+
   
 exports.findProfesorById = async (Id,escuelaId) => {
 	console.log('@@ model => ', Id)

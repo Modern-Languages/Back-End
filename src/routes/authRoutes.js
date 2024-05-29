@@ -27,9 +27,9 @@ router.put('/update-Profesor/:Id/:EscuelaId', authMiddleware, ProfesorController
 
 //Clases
 router.post('/agregarClase/:EscuelaId', ClasesController.agregar)
-router.get('/get-allClases/:EscuelaId' ,ClasesController.getAllClases)
-router.delete('/delete-Clases/:Id/:EscuelaId', ClasesController.deleteClase)
-router.put('/update-Clases/:Id/:EscuelaId', ClasesController.updateClase)
+router.get('/get-allClases/:EscuelaId',authMiddleware ,ClasesController.getAllClases)
+router.delete('/delete-Clases/:Id/:EscuelaId',authMiddleware, ClasesController.deleteClase)
+router.put('/update-Clases/:Id/:EscuelaId',authMiddleware, ClasesController.updateClase)
 
 
 

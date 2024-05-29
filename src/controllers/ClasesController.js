@@ -17,7 +17,7 @@ exports.agregar = async (req, res) => {
 		const newUser = {
 			Cla_Id: Cla_Id,
 			Cla_Nombre: Cla_Nombre,
-			Cla_Profesor: Cla_Profesor,
+			Cla_Profesor: 'Pendiente',
 			Cla_Alumnos: Cla_Alumnos
 
 		}

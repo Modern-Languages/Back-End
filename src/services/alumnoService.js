@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const { createAlumno, findAlumnoByNUA, getAllAlumnos, deleteAlumno, updateAlumno } = require('../models/AlumnosModel')
+const { createAlumno,agregarAlumnoClase ,findAlumnoByNUA, getAllAlumnos, deleteAlumno, updateAlumno } = require('../models/AlumnosModel')
 require('dotenv').config()
 
 exports.createAlumno = async (AlumnoData,escuelId) => {
@@ -9,6 +9,26 @@ exports.createAlumno = async (AlumnoData,escuelId) => {
 		const createdAlumno = await createAlumno(AlumnoData,escuelId)
 		console.log('@@@ service => ', createdAlumno)
 		if (createdAlumno.success) {
+			return {
+				success: true
+			}
+		}
+		return {
+			success: false,
+			message: 'Error al registrar'
+		}
+	} catch (error) {
+		return {
+			success: false,
+			error: error.message
+		}
+	}
+}
+
+exports.agregarAlumnoClase = async (claseId, NUA, escuelaId) => {
+	try {
+		const agregarAlumno = await agregarAlumnoClase(claseId, NUA, escuelaId)
+		if (agregarAlumno.success) {
 			return {
 				success: true
 			}

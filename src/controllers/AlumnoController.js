@@ -1,13 +1,12 @@
 const bcrypt = require('bcrypt')
 const jsonwebtoken = require('jsonwebtoken')
-const { createAlumno, findAlumnoByNUA, getAllAlumnos, deleteAlumno, updateAlumno } = require('../services/alumnoService')
+const { createAlumno,agregarAlumnoClase, findAlumnoByNUA, getAllAlumnos, deleteAlumno, updateAlumno } = require('../services/alumnoService')
 
 exports.agregar = async (req, res) => {
   try {
-		// Codigo para registrarse
-		const escuelId = req.params.EscuelaId
+		const escuelaId = req.params.EscuelaId
 		const {Alm_NUA,Alm_Nombre,Alm_Genero,Alm_Clase,Alm_Email,Alm_telefono,Alm_Password } = req.body
-		const existingAlumno = await findAlumnoByNUA(Alm_NUA,escuelId)
+		const existingAlumno = await findAlumnoByNUA(Alm_NUA,escuelaId)
 		if (existingAlumno.success) {
 			return res.status(400).json({
 				message: 'El usuario ya esta registrado'
@@ -15,8 +14,6 @@ exports.agregar = async (req, res) => {
 		}
 		const saltRounds = 10
 		const hashedPassword = await bcrypt.hash(Alm_Password, saltRounds)
-
-
 		const newUser = {
 			Alm_NUA: Alm_NUA,
 			Alm_Nombre: Alm_Nombre,
@@ -26,8 +23,15 @@ exports.agregar = async (req, res) => {
 			Alm_telefono: Alm_telefono,
 			Alm_Password: hashedPassword,
 		}
+		console.log('clases',Alm_Clase,Alm_NUA,escuelaId)
+		const AlumnoClase = await agregarAlumnoClase(Alm_Clase, Alm_NUA, escuelaId)
+		if (!AlumnoClase.success) {
+			return res.status(400).json({
+				message: 'La clase no esta registrada '
+			})
+		}
 
-		const AlumnoResult = await createAlumno(newUser,escuelId)
+		const AlumnoResult = await createAlumno(newUser,escuelaId)
 		console.log('@@@ result => ', AlumnoResult)
 		if (AlumnoResult.success) {
 			res.status(201).json({
@@ -44,6 +48,7 @@ exports.agregar = async (req, res) => {
 		})
 	}
 }
+
 exports.getAllAlumnos = async (req, res) => {
 	try {
 		const escuelId = req.params.EscuelaId
