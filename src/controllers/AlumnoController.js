@@ -5,7 +5,7 @@ const { createAlumno,agregarAlumnoClase, findAlumnoByNUA, getAllAlumnos, deleteA
 exports.agregar = async (req, res) => {
   try {
 		const escuelaId = req.params.EscuelaId
-		const {Alm_NUA,Alm_Nombre,Alm_Genero,Alm_Clase,Alm_Email,Alm_telefono,Alm_Password } = req.body
+		const {Alm_NUA,Alm_Nombre,Alm_Genero,Alm_Clase,Alm_Email,Alm_telefono,Alm_Edad,Alm_Password } = req.body
 		const existingAlumno = await findAlumnoByNUA(Alm_NUA,escuelaId)
 		if (existingAlumno.success) {
 			return res.status(400).json({
@@ -21,6 +21,7 @@ exports.agregar = async (req, res) => {
 			Alm_Clase: Alm_Clase,
 			Alm_Email: Alm_Email,
 			Alm_telefono: Alm_telefono,
+			Alm_Edad: Alm_Edad,
 			Alm_Password: hashedPassword,
 		}
 		console.log('clases',Alm_Clase,Alm_NUA,escuelaId)
